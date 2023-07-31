@@ -27,8 +27,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
- * @author kautsu
+ * A source of any number of coterie upgrades.
+ * @author Antti Kautiainen
  */
 public abstract class CoterieUpgradeSource {
     
