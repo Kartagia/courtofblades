@@ -99,6 +99,7 @@ public class DefaultHouses {
         Function<List<?>, java.util.Set<CoterieUpgrade>> getCoterieUpgrades = (List<?> list) -> {
             try {
                 java.util.Set<CoterieUpgrade> upgrades = new java.util.HashSet<>();
+                upgrades.addAll(Optional.ofNullable((java.util.List<CoterieUpgrade>)list.get(4)).orElse(Collections.emptyList()));
                 return upgrades;
             } catch(Exception e) {
                 return null;
@@ -106,8 +107,9 @@ public class DefaultHouses {
         };
         Function<List<?>, java.util.Set<SpecialAbility>> getSpecialAbilities = (List<?> list) -> {
             try {
-                java.util.Set<SpecialAbility> upgrades = new java.util.HashSet<>();
-                return upgrades;
+                java.util.Set<SpecialAbility> abilities = new java.util.HashSet<>();
+                abilities.addAll(Optional.ofNullable((java.util.List<SpecialAbility>)list.get(5)).orElse(Collections.emptyList()));
+                return abilities;
             } catch(Exception e) {
                 return null;
             }
