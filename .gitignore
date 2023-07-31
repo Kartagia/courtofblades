@@ -1,0 +1,11 @@
+target/*
+
+# NetBeans configuration ignore
+nb-configuration.xml
+settings.xml
+
+# VSCode configuration ignore
+.VSCode
+
+# Idea
+.idea
