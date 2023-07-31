@@ -1,5 +1,7 @@
 package com.kautiainen.antti.rpgs.courtofblades.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Special ability.
  * @author kautsu
