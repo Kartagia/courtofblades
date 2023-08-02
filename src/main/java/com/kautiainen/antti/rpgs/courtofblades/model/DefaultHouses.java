@@ -45,6 +45,10 @@ public class DefaultHouses {
         java.util.List<HouseModel> result = new java.util.ArrayList<>();
         //TODO: Replace generation of the houses with generation from JSON/XML resource.
         List<String> houseNames = Arrays.asList("Corvetto", "Bastion", "Battalia", "Erlanda", "Lovell", "Al-Mari");
+        
+        /**
+         * Function getting the house name from the list model of house data.
+         */
         Function<List<?>, String> getHouseName = (List<?> list) -> {
             try {
                 return (String)list.get(0);
@@ -52,6 +56,10 @@ public class DefaultHouses {
                 return null;
             }
         };
+
+        /**
+         * Function getting the primary resource from the list model of house data.
+         */
         Function<List<?>, Resource> getPrimaryResource = (List<?> list) -> {
             try {
                 return (Resource)list.get(1);
@@ -59,6 +67,9 @@ public class DefaultHouses {
                 return null;
             }
         };
+        /**
+         * Function getting the healer type of the list model of house data.
+         */
         Function<List<?>, HealerType> getHealerType = (List<?> list) -> {
             try {
                 return (HealerType)list.get(2);
@@ -66,6 +77,10 @@ public class DefaultHouses {
                 return null;
             }
         };
+
+        /**
+         * Function getting the special feature from the list model of house data.
+         */
         Function<List<?>, SpecialFeature> getSpecialFeature = (List<?> list) -> {
             try {
                 return (SpecialFeature)list.get(3);
@@ -73,6 +88,10 @@ public class DefaultHouses {
                 return null;
             }
         };
+        /**
+         * Function getting the coterie upgrades from the list model of house data.
+         */
+        @SuppressWarnings("unchecked")
         Function<List<?>, java.util.Set<CoterieUpgrade>> getCoterieUpgrades = (List<?> list) -> {
             try {
                 java.util.Set<CoterieUpgrade> upgrades = new java.util.HashSet<>();
@@ -82,6 +101,8 @@ public class DefaultHouses {
                 return null;
             }
         };
+
+        @SuppressWarnings("unchecked")
         Function<List<?>, java.util.Set<SpecialAbility>> getSpecialAbilities = (List<?> list) -> {
             try {
                 java.util.Set<SpecialAbility> abilities = new java.util.HashSet<>();
@@ -92,6 +113,11 @@ public class DefaultHouses {
             }
         };
         Function<List<?>, List<?>> toList = (List<?> list) -> (list);
+
+
+        /**
+         * The house data in list model. 
+         */
         final java.util.Map<String, List<?>> houseData = Arrays.asList(
             (List<?>)Arrays.asList("Corvetto", Resource.Magic, HealerType.Grace, null, Arrays.asList()), 
             (List<?>)Arrays.asList("Al-Mari", Resource.Supply, HealerType.Physician, null, Arrays.asList()),
@@ -100,6 +126,8 @@ public class DefaultHouses {
             (List<?>)Arrays.asList("Battalia",Resource.Force,  HealerType.Physician, null, Arrays.asList()),
             (List<?>)Arrays.asList("Erlanda", Resource.Wealth, HealerType.Physician, null, Arrays.asList())
         ).stream().collect(Collectors.toMap(getHouseName, toList));
+
+        // TODO: Replaced section end.
 
         // Create houses from the house data.
         for (String houseName : houseNames) {
