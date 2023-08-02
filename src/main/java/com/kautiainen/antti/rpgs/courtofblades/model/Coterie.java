@@ -1,40 +1,16 @@
-/*
- * The MIT License
- *
- * Copyright 2023 kautsu.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
 package com.kautiainen.antti.rpgs.courtofblades.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * Class representing a coterie of the player characters.
  * @author kautsu
  */
-public class Coterie {
+public class Coterie extends Named implements SpecialAbilityContainer {
     
     /**
      * The list of coterie upgrades the coterie
@@ -43,19 +19,46 @@ public class Coterie {
     private List<CoterieUpgrade> upgrades = null;
     
     /**
-     * Th ecoterie type of the coterie.
+     * The coterie type of the coterie.
      */
     private CoterieType type = null;
     
     /**
+     * Set the upgrades of the coterie.
+     *
+     * @param upgrades The new upgrades of the coterie.
+     */
+    public void setUpgrades(List<CoterieUpgrade> upgrades) throws IllegalArgumentException {
+        this.upgrades = upgrades;
+    }
+
+    /**
+     * Get the coterie type.
+     * @return The current coterie type.
+     */
+    public CoterieType getType() {
+        return type;
+    }
+
+    /**
+     * Set the coterie type.
+     * @param type The type of the coterie.
+     * @throws IllegalArgumentException The given coterie type was invalid.
+     */
+    public void setType(CoterieType type) throws IllegalArgumentException {
+        this.type = type;
+    }
+
+    /**
      * The house the coterie serves.
      */
     private HouseModel house = null;
-    
+
     /**
-     * The nane of the coterie.
+     * The colleciton of the abilities.
+     * TODO: Replace this with validating list refusing all values the coterie does not allow.
      */
-    private String name;
+    private List<SpecialAbility> abilities = new java.util.ArrayList<>();
     
     /**
      * Create an uninitialized coterie.
@@ -64,12 +67,13 @@ public class Coterie {
         
     }
     
-    public String getName() {
-        return this.name;
-    }
-    
-    public void setName(String name) {
-        this.name = name;
+    /**
+     * Create a new coterie with given name.
+     * @param name The name of the created coterie.
+     * @throws IllegalArgumentException The given coterie name was invalid.
+     */
+    public Coterie(String name) throws IllegalArgumentException {
+        super(name);
     }
     
     /**
@@ -107,5 +111,39 @@ public class Coterie {
     public void setHouse(HouseModel house) {
         this.house = house;
     }
+
+    @Override
+    public List<SpecialAbility> getSpecialAbilities() {
+        return this.abilities;
+    }
+
+    @Override
+    public void setSpecialAbilities(Collection<? extends SpecialAbility> specialAbilities)
+            throws IllegalArgumentException, UnsupportedOperationException {
+        if (specialAbilities == null) {
+            this.removeSpecialAbilities();
+        } else if (validSpecialAbilities(specialAbilities)) {
+            if (removeSpecialAbilities()) {
+                addSpecialAbilities(specialAbilities);
+            }
+        } else {
+            throw new IllegalArgumentException(INVALID_ABILITIES_MESSAGE);
+        }
+    }
+
+    @Override
+    public boolean validSpecialAbility(SpecialAbility ability) {
+        /* TODO: Add accepting only coterie special abilities when coterie specific special abilities
+        are implemented */
+        return (ability != null);
+    }
+
+    @Override
+    public Predicate<? super SpecialAbility> getEquivalentFilter(SpecialAbility seeked) {
+        // TODO Add alterations required for coterie specific abilities support
+        return SpecialAbilityContainer.super.getEquivalentFilter(seeked);
+    }
     
+    
+
 }
