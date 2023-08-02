@@ -2,7 +2,6 @@ package com.kautiainen.antti.rpgs.courtofblades.model;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
