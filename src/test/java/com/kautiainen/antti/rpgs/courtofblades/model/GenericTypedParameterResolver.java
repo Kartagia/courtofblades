@@ -148,9 +148,9 @@ public class GenericTypedParameterResolver<T> implements ParameterResolver {
      * @return An undefined value, if the type is undefined. Otherwise a predicate
      * accepting only classes castable to the given type.
      */
-    public static Predicate<Class<?>> isInstanceOrNull(Class<?> type) {
+    public static<TYPE> Predicate<Class<?>> isInstanceOrNull(Class<? extends TYPE> type) {
         if (type == null) return null;
-        return new TypeTester(type);
+        return new TypeTester<TYPE>(type);
     }
 
     /**
