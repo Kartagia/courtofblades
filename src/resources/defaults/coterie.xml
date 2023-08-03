@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coterie>
+    <name></name>
+    <house>
+        <name></name>
+        <healer></healer>
+        <specialFeature></specialFeature>
+        <upgrades></upgrades>
+        <xp-triggers></xp-triggers>
+        <resource></resource>
+    </house>
+    <strengths>
+        <strength type="house"></strength>
+        <strength></strength>
+    </strengths>
+    <healer></healer>
+    <reputations>
+        <reputation picked="false">Ambitious</reputation>
+        <reputation picked="false">Brutal</reputation>
+        <reputation picked="false">Daring</reputation>
+        <reputation picked="false">Honorable</reputation>
+        <reputation picked="false">Subtle</reputation>
+        <reputation picked="false">Arcane</reputation>
+        <reputation picked="false">Loyal</reputation>
+        <reputation picked="false">Reliable</reputation>
+        <reputation picked="false">Uncouth</reputation>
+        <reputation picked="false">Respectable</reputation>
+        <reputation picked="false">Dangerous</reputation>        
+    </reputations>
+    <influcence current="0" max="4"/>
+    <exposure current="0" max="8"/>
+    <shame current="0" max="3"/>
+    <advancement>
+        <xp-triggers session-xp="0">
+            <xp-trigger>You contented with challenges above your current station.</xp-trigger>
+            <xp-trigger>You bolstered your coterie's reputation or developed a new one.</xp-trigger>
+            <xp-trigger>You expressed the goals, drives, inner conflict, or essential nature of the Coterie.</xp-trigger>
+        </xp-triggers>
+        <xp current="0" max="10"/>
+        <upgrades></upgrades>
+        <abilities></abilities>
+    </advancement>
+    <intrique>
+        <favored-contacts></favored-contacts>
+        <spheres>
+            <sphere>
+                <name></name>
+                <perk></perk>
+                <contact></contact>
+            </sphere>
+        </spheres>
+    </intrique>
+</coterie>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<house id="name">
+    <name></name>
+    <resource></resource>
+    <special-feature></special-feature>
+    <healer-type></healer-type>
+    <special-abilities></special-abilities>
+    <xp-trigger>
+    </xp-trigger>
+    <upgrades>
+    </upgrades>
+    <schemes></schemes>
+</house>

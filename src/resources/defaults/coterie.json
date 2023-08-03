@@ -1,0 +1,21 @@
+{
+    "house":"",
+    "name":"",
+    "strengths":[],
+    "healer": {"type": "", "name":""},
+    "upgrades":[],
+    "abilities":[],
+    "xp-triggers":[],
+    "retinues-and-colleagues":[],
+    "xp":{"type":"track", "max":10, "current":0},
+    "influence": {"type":"track", "max":4, "current":0},
+    "shame": {"type":"track", "max":3, "current":0},
+    "exposure": {"type":"track", "max":9, "current":0},
+    "intrique": {
+        "all-spheres": [],
+        "favored-contact": "",
+        "spheres":[
+            {"name": "", "perk":"", "contact":""}
+        ]
+    }
+}

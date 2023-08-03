@@ -6,12 +6,68 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
+
 /**
  * Class representing a coterie of the player characters.
  * @author kautsu
  */
 public class Coterie extends Named implements SpecialAbilityContainer {
-    
+
+    /**
+     * The influence track.
+     */
+    private Track influece = new Track(0, 4);
+
+    public Track getInfluece() {
+        return influece;
+    }
+
+    public void setInfluece(Track influece) {
+        this.influece = influece;
+    }
+
+    public Track getExposure() {
+        return exposure;
+    }
+
+    public void setExposure(Track exposure) {
+        this.exposure = exposure;
+    }
+
+    public Track getShame() {
+        return shame;
+    }
+
+    public void setShame(Track shame) {
+        this.shame = shame;
+    }
+
+    public Track getCoterieXp() {
+        return coterieXp;
+    }
+
+    public void setCoterieXp(Track coterieXp) {
+        this.coterieXp = coterieXp;
+    }
+
+    /**
+     * The exposure track.
+     */
+    private Track exposure = new Track(0, 9);
+
+    /**
+     * The shame track.
+     */
+    private Track shame = new Track(0, 3);
+
+    /**
+     * The experience track.
+     */
+    private Track coterieXp = new Track(0, 10);
+
     /**
      * The list of coterie upgrades the coterie
      * has.
@@ -81,6 +137,7 @@ public class Coterie extends Named implements SpecialAbilityContainer {
      * @return The list of coterie upgrades the coterie
      * has.
      */
+    @JsonGetter("uprades")
     public java.util.List<CoterieUpgrade> getUpgrades() {
         return this.upgrades;
     }
@@ -89,6 +146,7 @@ public class Coterie extends Named implements SpecialAbilityContainer {
      * Set the coterie upgrades the coterie has.
      * @param upgrades The upgrades of the coterie.
      */
+    @JsonSetter("uprades")
     public void setUpgrades(Collection<? extends CoterieUpgrade> upgrades) {
         this.upgrades = new ArrayList<>(
         java.util.Optional.ofNullable(upgrades).orElse(Collections.emptyList()));
@@ -98,6 +156,7 @@ public class Coterie extends Named implements SpecialAbilityContainer {
      * Get the house the coterie is serving.
      * @return The house coterie is serving.
      */
+    @JsonGetter("house")
     public HouseModel getHouse() {
         return this.house;
     }
@@ -108,15 +167,18 @@ public class Coterie extends Named implements SpecialAbilityContainer {
      * @param house The new house the coterie
      * is serving.
      */
+    @JsonSetter("house")
     public void setHouse(HouseModel house) {
         this.house = house;
     }
 
+    @JsonGetter("abilities")
     @Override
     public List<SpecialAbility> getSpecialAbilities() {
         return this.abilities;
     }
 
+    @JsonIgnore
     @Override
     public void setSpecialAbilities(Collection<? extends SpecialAbility> specialAbilities)
             throws IllegalArgumentException, UnsupportedOperationException {
@@ -131,11 +193,13 @@ public class Coterie extends Named implements SpecialAbilityContainer {
         }
     }
 
+    @JsonSetter("abilities")
     @Override
     public boolean validSpecialAbility(SpecialAbility ability) {
         return (ability != null) && ability instanceof CoterieAbility;
     }
 
+    @JsonIgnore
     @Override
     public Predicate<? super SpecialAbility> getEquivalentFilter(SpecialAbility seeked) {
         return SpecialAbilityContainer.super.getEquivalentFilter(seeked);
