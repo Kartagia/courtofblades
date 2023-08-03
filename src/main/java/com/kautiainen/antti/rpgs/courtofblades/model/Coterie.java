@@ -133,14 +133,11 @@ public class Coterie extends Named implements SpecialAbilityContainer {
 
     @Override
     public boolean validSpecialAbility(SpecialAbility ability) {
-        /* TODO: Add accepting only coterie special abilities when coterie specific special abilities
-        are implemented */
-        return (ability != null);
+        return (ability != null) && ability instanceof CoterieAbility;
     }
 
     @Override
     public Predicate<? super SpecialAbility> getEquivalentFilter(SpecialAbility seeked) {
-        // TODO Add alterations required for coterie specific abilities support
         return SpecialAbilityContainer.super.getEquivalentFilter(seeked);
     }
     
