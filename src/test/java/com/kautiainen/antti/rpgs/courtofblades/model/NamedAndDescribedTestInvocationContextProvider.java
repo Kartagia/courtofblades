@@ -361,6 +361,7 @@ public abstract class NamedAndDescribedTestInvocationContextProvider<T extends N
                     quote(testCase.getDescription()));
             }
  
+            @Override
             public List<Extension> getAdditionalExtensions() {
                 return Arrays.asList(
                     new GenericTypedParameterResolver<NamedAndDescribedTestCase<T>>(testCase),
