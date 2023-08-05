@@ -38,7 +38,10 @@ public class Esultare {
         public EsultareClock(
             @JsonProperty("house") String house, 
             @JsonProperty("current") int value) {
-            super(value, 12, new ClockType("Esultare", "A racing clock of the Esultare houses"));
+            super(String.format("%s position", house), value, 12, new ClockType(
+                "Esultare", "A racing clock of the Esultare houses",
+                ClockType.REGRESS, ClockType.DEPLETES_EMPTY
+                ));
             this.houseName = house;
         }
 
