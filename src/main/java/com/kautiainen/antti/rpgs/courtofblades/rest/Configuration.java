@@ -8,7 +8,7 @@ import org.restexpress.util.Environment;
 import static com.kautiainen.antti.rpgs.courtofblades.rest.Constants.Init.*;
 
 public class Configuration
-extends Environment
+extends Environment implements ClockConstants
 {
 
 
@@ -49,7 +49,7 @@ extends Environment
 	@Override
 	protected void fillValues(Properties p)
 	{
-
+		initialize(p);
 	}
 
 	/**
