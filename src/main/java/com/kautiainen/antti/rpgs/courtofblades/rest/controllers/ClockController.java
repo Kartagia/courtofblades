@@ -22,7 +22,7 @@ public class ClockController implements Controller<Integer, Clock> {
     /**
      * A clock service storing the clocks into memory.
      */
-    public class MemoryClockService implements Controller.Service<Integer, Clock> {
+    public static class MemoryClockService implements Controller.Service<Integer, Clock> {
 
         private java.util.Map<Integer, Clock> entities = new ConcurrentHashMap<>();
 
