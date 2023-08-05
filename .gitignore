@@ -6,6 +6,7 @@ settings.xml
 
 # VSCode configuration ignore
 .VSCode
+*.code-workspace
 
 # Idea
 .idea
