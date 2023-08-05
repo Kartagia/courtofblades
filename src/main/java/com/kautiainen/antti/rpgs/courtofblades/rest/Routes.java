@@ -7,6 +7,7 @@ import org.restexpress.RestExpress;
  */
 public abstract class Routes
 {
+
 	/**
 	 * Define the routes of the server.
 	 * @param config The configuration of the server.
@@ -14,7 +15,7 @@ public abstract class Routes
 	 */
 	public static void define(Configuration config, RestExpress server)
     {
-		// TODO: Add routes for Abilities and Upgrades
+		// TODO: Add routes 
 
 
 		// or...

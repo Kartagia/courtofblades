@@ -19,7 +19,7 @@ public class Coterie extends Named implements SpecialAbilityContainer {
     /**
      * The influence track.
      */
-    private Track influece = new Track(0, 4);
+    private Track influece = new Track("Influence", 0, 4);
 
     public Track getInfluece() {
         return influece;
@@ -56,17 +56,17 @@ public class Coterie extends Named implements SpecialAbilityContainer {
     /**
      * The exposure track.
      */
-    private Track exposure = new Track(0, 9);
+    private Track exposure = new Track("Exposure", 0, 9);
 
     /**
      * The shame track.
      */
-    private Track shame = new Track(0, 3);
+    private Track shame = new Track("Shame", 0, 3);
 
     /**
      * The experience track.
      */
-    private Track coterieXp = new Track(0, 10);
+    private Track coterieXp = new Track("Experience", 0, 10);
 
     /**
      * The list of coterie upgrades the coterie

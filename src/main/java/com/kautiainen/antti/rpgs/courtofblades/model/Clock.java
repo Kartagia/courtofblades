@@ -1,13 +1,14 @@
 package com.kautiainen.antti.rpgs.courtofblades.model;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Clock {
+public class Clock extends Named {
 
     /**
      * THe class representing a clock type.
@@ -15,13 +16,53 @@ public class Clock {
     public static class ClockType extends NamedAndDescribed {
 
         /**
+         * The clock ends on both ends.
+         * The tug-of-war is implicitely {@link #PROGRESS}, {@link #REGRESS}, 
+         * {@link #DEPLETES_EMPTY}, {@link #COMPLETES_FULL}.
+         */
+        public static final String TUG_OF_WAR = "tug-of-war";
+
+        /**
+         * The clock may regress.
+         */
+        public static final String REGRESS = "regress";
+
+        /**
+         * The clock is linked to one or more clocks.
+         */
+        public static final String LINKED = "linked";
+
+        /**
+         * The clock unlocks one or more clocks.
+         */
+        public static final String CHAINED = "chained";
+
+        /**
+         * The clock may advance.
+         */
+        public static final String PROGRESS = "progress";
+
+        /**
+         * The clcok completes at maximum.
+         */
+        public static final String COMPLETES_FULL = "complete-full";
+
+        /**
+         * The clock completes at minimum.
+         */
+        public static final String DEPLETES_EMPTY = "complete-empty";
+
+        /**
          * A romance clock is a racing clock representing building of a romance. On completion the character gains par-amour.
          */
-        public static final Clock.ClockType ROMANCE_CLOCK = new Clock.ClockType("Romance", "A warring clock indicating progress to win a paramour");
+        public static final Clock.ClockType ROMANCE_CLOCK = new Clock.ClockType(
+            "Romance", "A warring clock indicating progress to win a paramour", TUG_OF_WAR);
         /**
          * One of a several clocks of a race only one clock may win.
          */
-        public static final Clock.ClockType RACING_CLOCK = new Clock.ClockType("Racing", "One of a group of clocks representing a race only one clock may win");
+        public static final Clock.ClockType RACING_CLOCK = new Clock.ClockType(
+            "Racing", "One of a group of clocks representing a race only one clock may win", 
+            LINKED, CHAINED, COMPLETES_FULL);
         /**
          * A clock representing a danger clock causing some trouble on completion.
          */
@@ -29,31 +70,119 @@ public class Clock {
         /**
          * A standard linked clock unlocking one or more clocks on completion.
          */
-        public static final Clock.ClockType LINKED_CLOCK = new Clock.ClockType("Linked", "A clock unlocking another clock on completion");
+        public static final Clock.ClockType LINKED_CLOCK = new Clock.ClockType(
+            "Linked", "A clock unlocking another clock on completion", LINKED, CHAINED, COMPLETES_FULL);
         /**
          * A warring clock also known as tug-of-war-clock.
          */
-        public static final Clock.ClockType WARRING_CLOCK = new Clock.ClockType("Warring", "A clock which may progress or regress with condition on both ends.");
+        public static final Clock.ClockType WARRING_CLOCK = new Clock.ClockType(
+            "Warring", "A clock which may progress or regress with condition on both ends.",
+            TUG_OF_WAR);
         /**
          * The standard progress clock type
          */
-        public static final Clock.ClockType PROGRESS_CLOCK = new Clock.ClockType("Progress", "A standard progress clock with somethign happening at the end.");
+        public static final Clock.ClockType PROGRESS_CLOCK = new Clock.ClockType(
+            "Progress", "A standard progress clock with somethign happening at the end.");
+
+        public static final Clock.ClockType REGRESS_CLOCK = new Clock.ClockType(
+            "Regress", "A regress clock starts at some tick amount, and ends when empty",
+            REGRESS, DEPLETES_EMPTY  
+        );
         /**
          * The standard progress clock type
          */
-        public static final Clock.ClockType LONG_TERM_CLOCK = new Clock.ClockType("Long Term Project", 
-        "A progress clock representing a long term project usually advanced with downtime activities.");
+        public static final Clock.ClockType LONG_TERM_CLOCK = new Clock.ClockType(
+            "Long Term Project", 
+            "A progress clock representing a long term project usually advanced with downtime activities.");
+
+
+        private java.util.Set<String> traits = new java.util.HashSet<>();
 
         public ClockType() {
-
+            super();
         }
 
+        /**
+         * Create a progressive clock ending when full.
+         * @param name The name of the clock.
+         * @param description The description of the clock.
+         */
+        public ClockType(String name, String description) {
+            this(name, description, PROGRESS, COMPLETES_FULL);
+        }
+
+        /**
+         * Create a clock with given traits.
+         * @param name The name of the clock.
+         * @param description The description of the clock.
+         * @param traits The tarits of the clock.
+         */
+        public ClockType(String name, String description, String... traits) {
+            this(name, description, Arrays.asList(traits));
+        }
+
+        /**
+         * Create a clock with given traits.
+         * @param name The name of the clock.
+         * @param description The description of the clock.
+         * @param traits The tarits of the clock.
+         */
         @JsonCreator
         public ClockType(
             @JsonProperty("name") String name, 
-            @JsonProperty("description") String description) 
+            @JsonProperty("description") String description, 
+            @JsonProperty("traits") java.util.Collection<String> traits) 
             throws IllegalArgumentException {
             super(name, description);
+            if (traits != null) {
+                this.traits.addAll(traits);
+            }
+        }
+
+
+        @JsonGetter("traits")
+        public java.util.Set<String> getTraits() {
+            return traits;
+        }
+
+        /**
+         * Does the type contain a trait.
+         * @param trait The tested trait.
+         * @return True, if and only if the type contains the given traits.
+         */
+        public boolean hasTrait(String trait) {
+            return trait != null && getTraits().contains(trait);
+        }
+
+        /**
+         * Does the type has all traits.
+         * @param traits The list of tested traits.
+         * @return True, if and only if the type has all traits.
+         */
+        public boolean hasTraits(String... traits) {
+            if (traits != null) {
+                for (String trait: traits) {
+                    if (!hasTrait(trait)) return false;
+                } 
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        /**
+         * Does the type has at least one of the listed traits.
+         * @param traits The list of tested traits.
+         */
+        public boolean hasAnyTrait(String... traits) {
+            if (traits != null) {
+                for (String trait: traits) {
+                    if (hasTrait(trait)) return true;
+                }
+                return false;
+            } else {
+                return false;
+            }
         }
     }
 
@@ -66,30 +195,97 @@ public class Clock {
         ClockType.LINKED_CLOCK,
         ClockType.DANGER_CLOCK,
         ClockType.RACING_CLOCK,
-        ClockType.ROMANCE_CLOCK
+        ClockType.ROMANCE_CLOCK,
+        ClockType.LONG_TERM_CLOCK
     );
+
+    /**
+     * The maximum of the clock.
+     */
     private int max;
+
+    /**
+     * The minimum of the clock.
+     */
     private int current;
+
+    /**
+     * The type of the clock.
+     */
     private ClockType type;
 
+    /**
+     * Is the clock enabled.
+     */
+    private boolean isEnabled = true;
 
 
+
+    /**
+     * Create a progress clock with a name, a current position,
+     * and a full position.
+     * @param name The name of the clock.
+     * @param current The current position of the clock.
+     * @param max The maximum position of a full clock.
+     */
     @JsonCreator
     public Clock(
+        @JsonProperty("name") String name,
         @JsonProperty("current") int current, 
         @JsonProperty("max") int max) {
-        this(current, max, ClockType.PROGRESS_CLOCK);
+        this(name, current, max, ClockType.PROGRESS_CLOCK);
     }
 
+    /**
+     * Create a clock with a name, a current position, 
+     * a maximum number of ticks, and a type.
+     * The clock will be enabled unless it is either completed
+     * or depleted.
+     * @param name The name of the clock.
+     * @param current The current position of the clock.
+     * @param max The maximum position of a full clock.
+     * @param type The type of the clock.
+     * @throws IllegalArgumentException Any of hte given parameters were invalid.
+     */
     @JsonCreator
     public Clock(
+        @JsonProperty("name") String name,
         @JsonProperty("current") int current,
         @JsonProperty("max") int max, 
         @JsonProperty("type") ClockType type) {
+        super(name);
         setType(type);
         setMaximum(max);
         setCurrent(current);
+        setEnabled(!isCompleted() && !isDepleted());
     }
+
+    /**
+     * Create a clock with a name, a current position, 
+     * a maximum number of ticks, and a type.
+     * The clock will be enabled unless it is either completed
+     * or depleted.
+     * @param name The name of the clock.
+     * @param current The current position of the clock.
+     * @param max The maximum position of a full clock.
+     * @param type The type of the clock.
+     * @throws IllegalArgumentException Any of hte given parameters were invalid.
+     */
+    @JsonCreator
+    public Clock(
+        @JsonProperty("name") String name,
+        @JsonProperty("current") int current,
+        @JsonProperty("max") int max, 
+        @JsonProperty("type") ClockType type, 
+        @JsonProperty("enabled") boolean enabled) throws IllegalArgumentException {
+        super(name);
+        setType(type);
+        setMaximum(max);
+        setCurrent(current);
+        setEnabled(enabled);
+    }
+
+    
 
     /**
      * Get the type of the clock.
@@ -103,8 +299,11 @@ public class Clock {
     /**
      * Set the type of the clock.
      * @param type The new type of the clock.
+     * @throws IllegalArgumentException The type is invalid.
      */
-    public synchronized void setType(ClockType type) {
+    public synchronized void setType(ClockType type) throws IllegalArgumentException {
+        if (type == null) throw new IllegalArgumentException("Invalid clock type", 
+        new NullPointerException("Type must be specified"));
         this.type = type;
     }
 
@@ -209,4 +408,62 @@ public class Clock {
         }
         return amount;
     }
+
+    /**
+     * Is the clock completed.
+     * @return True, if and only if the clock is completed.
+     */
+    public synchronized boolean isCompleted() {
+        return getType().hasAnyTrait(ClockType.TUG_OF_WAR, ClockType.COMPLETES_FULL) && getCurrent() >= getMaximum();
+    }
+
+    /**
+     * Is the clock depleted.
+     * @return True, if and only if the clock is depleted.
+     */
+    public synchronized boolean isDepleted() {
+        return getType().hasAnyTrait(ClockType.TUG_OF_WAR, ClockType.DEPLETES_EMPTY) && getCurrent() <= getMinimum();
+    }
+
+    /**
+     * Is the clock disabled.
+     * @return True, if and only if the clock is disabled.
+     */
+    public synchronized boolean isDisabled() {
+        return !isEnabled();
+    }
+
+    @JsonGetter("enabled")
+    public synchronized boolean isEnabled() {
+        return isEnabled;
+    }
+
+    /**
+     * Set the enabled status of the clock.
+     * @param enabled The enabled status of the clock.
+     */
+    public synchronized void setEnabled(boolean enabled) {
+        this.isEnabled = enabled;
+    }
+
+
+    /**
+     * Generate the clock events the current clock state causes.
+     * @return The list of clock events the current clock causes.
+     * @implNote The default implementation only creates the 
+     * clock compelted and clock depleted events.
+     */
+    protected synchronized List<ClockEvent> getClockEvents() {
+        if (isCompleted()) {
+            // Creating the clock completed event.
+            return Collections.singletonList(ClockEvent.completedClock(this,getName(), getCurrent() - getMaximum()));
+        } else if (isDepleted()) {
+            // Creating the clock depleted events.
+            return Collections.singletonList(ClockEvent.depletedClock(this,getName(), getCurrent() + getMinimum()));
+        } else {
+            // There si no events to report.
+            return Collections.emptyList();
+        }
+    }
+
 }
