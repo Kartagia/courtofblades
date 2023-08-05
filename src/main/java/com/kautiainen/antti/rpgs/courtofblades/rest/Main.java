@@ -1,4 +1,4 @@
-package com.kautiainen.antti.solita;
+package com.kautiainen.antti.rpgs.courtofblades.rest;
 
 import org.restexpress.util.Environment;
 

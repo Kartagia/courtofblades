@@ -31,6 +31,8 @@ extends Environment
 	 */
 	private int executorThreadPoolSize;
 
+	private String hostName;
+
 	// TODO: Add property fields.
 
 	//////////////////////////////////////////////////////////////////////////////////
@@ -57,7 +59,8 @@ extends Environment
 	protected void initialize(Properties properties) {
 		// Defining the server specific internal properties from the given properties.
 		this.port = Integer.parseInt(properties.getProperty(PORT_PROPERTY, String.valueOf(RestExpress.DEFAULT_PORT)));
-		this.baseUrl = properties.getProperty(BASE_URL_PROPERTY, "http://localhost:" + String.valueOf(port));
+		this.hostName = properties.getProperty(HOST_PROPERTY, DEFAULT_HOST);
+		this.baseUrl = properties.getProperty(BASE_URL_PROPERTY, hostName + ":" + String.valueOf(port));
 		this.executorThreadPoolSize = Integer.parseInt(properties.getProperty(EXECUTOR_THREAD_POOL_SIZE, DEFAULT_EXECUTOR_THREAD_POOL_SIZE));
 		// TODO: Add filling the property values from the envinroment.
 
@@ -71,6 +74,14 @@ extends Environment
 	 * @param properties The environmental properites.
 	 */
 	protected void initializeControllers(Properties properties) {
+	}
+
+	/**
+	 * Get the server host name.
+	 * @return The current hostname of the server.
+	 */
+	public synchronized String getServerHost() {
+		return hostName;
 	}
 
 	/**

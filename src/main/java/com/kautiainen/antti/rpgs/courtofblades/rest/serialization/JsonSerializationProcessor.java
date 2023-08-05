@@ -1,4 +1,4 @@
-package com.kautiainen.antti.solita.serialization;
+package com.kautiainen.antti.rpgs.courtofblades.rest.serialization;
 
 import org.restexpress.serialization.json.JacksonJsonProcessor;
 
