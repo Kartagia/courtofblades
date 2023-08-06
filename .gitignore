@@ -1,4 +1,5 @@
 target/*
+config/*
 
 # NetBeans configuration ignore
 nb-configuration.xml

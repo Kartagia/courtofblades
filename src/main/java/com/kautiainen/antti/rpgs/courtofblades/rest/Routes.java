@@ -16,7 +16,7 @@ public abstract class Routes
 	public static void define(Configuration config, RestExpress server)
     {
 		// TODO: Add routes 
-
+		ClockRoutes.define(config, server);
 
 		// or...
 		//		server.regex("/some.regex", config.getRouteController());

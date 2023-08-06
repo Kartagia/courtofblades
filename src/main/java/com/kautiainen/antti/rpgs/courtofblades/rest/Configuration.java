@@ -5,10 +5,13 @@ import java.util.Properties;
 import org.restexpress.RestExpress;
 import org.restexpress.util.Environment;
 
+import com.kautiainen.antti.rpgs.courtofblades.rest.controllers.ClockController;
+import com.kautiainen.antti.rpgs.courtofblades.rest.controllers.MemoryClockService;
+
 import static com.kautiainen.antti.rpgs.courtofblades.rest.Constants.Init.*;
 
 public class Configuration
-extends Environment implements ClockConstants
+extends Environment implements ClockConfig
 {
 
 
@@ -38,6 +41,12 @@ extends Environment implements ClockConstants
 	//////////////////////////////////////////////////////////////////////////////////
 	// The controller implementations
 	//////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * The clock controller. 
+	 */
+	private ClockController clockController;
+
 	
 	// TODO: Add the controller implementation instance fields
 
@@ -74,6 +83,14 @@ extends Environment implements ClockConstants
 	 * @param properties The environmental properites.
 	 */
 	protected void initializeControllers(Properties properties) {
+		initializeClockController(properties);
+	}
+
+	@Override
+	public void initializeClockController(Properties properties) {
+
+		this.clockController = new ClockController(new MemoryClockService());
+
 	}
 
 	/**
@@ -109,6 +126,11 @@ extends Environment implements ClockConstants
 	public synchronized int getExecutorThreadPoolSize()
 	{
 		return executorThreadPoolSize;
+	}
+
+	@Override
+	public synchronized ClockController getClockController() {
+		return this.clockController;
 	}
 
 }
