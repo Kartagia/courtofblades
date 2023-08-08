@@ -1,9 +1,11 @@
 package com.kautiainen.antti.rpgs.courtofblades.rest.controllers;
 
 import org.restexpress.Request;
+import org.restexpress.Response;
 import org.restexpress.exception.BadRequestException;
 
 import com.kautiainen.antti.rpgs.courtofblades.model.Clock;
+import com.kautiainen.antti.rpgs.courtofblades.model.IdClock;
 import com.kautiainen.antti.rpgs.courtofblades.rest.ClockConstants;
 
 /**
@@ -66,5 +68,11 @@ public class ClockController implements Controller<Integer, Clock> {
 
         }
     }
-    
+
+    @Override
+    public Clock create(Request request, Response response) {
+        Clock clock = getEntity(request);
+        Integer id = getService().create(clock);
+        return new IdClock<Integer>(id, getService().fetch(id).orElse(null));
+    }
 }

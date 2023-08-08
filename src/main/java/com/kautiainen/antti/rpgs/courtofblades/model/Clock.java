@@ -3,16 +3,23 @@ package com.kautiainen.antti.rpgs.courtofblades.model;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 
+/**
+ * Clock represents a counter.
+ */
 public class Clock extends Named {
 
     /**
      * THe class representing a clock type.
      */
+    @JsonRootName(value="clock")
     public static class ClockType extends NamedAndDescribed {
 
         /**
@@ -96,8 +103,15 @@ public class Clock extends Named {
             "A progress clock representing a long term project usually advanced with downtime activities.");
 
 
+        /**
+         * The traits of the clock type.
+         */
         private java.util.Set<String> traits = new java.util.HashSet<>();
 
+        /**
+         * Create an uninitialized clock type.
+         * @implNote This should only be used if creating clock using properties.
+         */
         public ClockType() {
             super();
         }
@@ -139,6 +153,35 @@ public class Clock extends Named {
             }
         }
 
+        /**
+         * Create a clock with given traits.
+         * @param name The name of the clock.
+         * @param description The description of the clock.
+         * @param traits The tarits of the clock.
+         */
+        @JsonCreator
+        public ClockType(
+            @JsonProperty("name") String name, 
+            @JsonProperty("description") String description, 
+            @JsonProperty("traits") java.util.List<String> traits)
+            throws IllegalArgumentException {
+            this(name, description, (java.util.Collection<String>)traits);
+        }
+
+        /**
+         * Create a clock with given traits.
+         * @param name The name of the clock.
+         * @param description The description of the clock.
+         * @param traits The tarits of the clock.
+         */
+        @JsonCreator
+        public ClockType(
+            @JsonProperty("name") String name, 
+            @JsonProperty("description") String description, 
+            @JsonProperty("traits") java.util.Set<String> traits)
+            throws IllegalArgumentException {
+            this(name, description, (java.util.Collection<String>)traits);
+        }
 
         @JsonGetter("traits")
         public java.util.Set<String> getTraits() {
@@ -152,6 +195,21 @@ public class Clock extends Named {
          */
         public boolean hasTrait(String trait) {
             return trait != null && getTraits().contains(trait);
+        }
+
+
+        /**
+         * Does the type has all traits.
+         * @param traits The list of tested traits.
+         * @return True, if and only if the type has all traits.
+         */
+        public boolean hasTraits(java.util.Collection<String> traits) {
+            if (traits != null) {
+                return traits.stream().allMatch(this::hasTrait);
+            } else {
+                return false;
+            }
+
         }
 
         /**
@@ -174,6 +232,19 @@ public class Clock extends Named {
          * Does the type has at least one of the listed traits.
          * @param traits The list of tested traits.
          */
+        public boolean hasAnyTrait(java.util.Collection<String> traits) {
+            if (traits != null) {
+                return traits.stream().anyMatch(this::hasTrait);
+            } else {
+                return false;
+            }
+        }
+
+
+        /**
+         * Does the type has at least one of the listed traits.
+         * @param traits The list of tested traits.
+         */
         public boolean hasAnyTrait(String... traits) {
             if (traits != null) {
                 for (String trait: traits) {
@@ -184,6 +255,41 @@ public class Clock extends Named {
                 return false;
             }
         }
+
+        /**
+         * Is the other clock type equal to the current one.
+         * @param other The ohter clock type.
+         * @return True, if and only if the clock types are equals.
+         */
+        public boolean equals(ClockType other) {
+            if (other == null) return false;
+            if (other == this) return true;
+            return Objects.equals(getName(), other.getName()) && 
+            getTraits().equals(other.getTraits());
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + Objects.hash(getName());
+            result = prime * result + ((traits == null) ? 0 : traits.hashCode());
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (ClockType.class.isAssignableFrom(obj.getClass())) {
+                return equals((ClockType)obj);
+            } else 
+                return false;
+        }
+
+        
     }
 
     /**
@@ -371,6 +477,7 @@ public class Clock extends Named {
      * The minimum of the clock.
      * @return The minimum of the clock.
      */
+    @JsonIgnore
     public synchronized int getMinimum() {
         return 0;
     }
@@ -433,6 +540,10 @@ public class Clock extends Named {
         return !isEnabled();
     }
 
+    /**
+     * Is the clock enabled.
+     * @return True, if and only if the clock is enabled.
+     */
     @JsonGetter("enabled")
     public synchronized boolean isEnabled() {
         return isEnabled;
@@ -453,7 +564,8 @@ public class Clock extends Named {
      * @implNote The default implementation only creates the 
      * clock compelted and clock depleted events.
      */
-    protected synchronized List<ClockEvent> getClockEvents() {
+    @JsonIgnore
+    public synchronized List<ClockEvent> getClockEvents() {
         if (isCompleted()) {
             // Creating the clock completed event.
             return Collections.singletonList(ClockEvent.completedClock(this,getName(), getCurrent() - getMaximum()));
@@ -466,4 +578,45 @@ public class Clock extends Named {
         }
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + max;
+        result = prime * result + current;
+        result = prime * result + ((type == null) ? 0 : type.hashCode());
+        result = prime * result + (isEnabled ? 1231 : 1237);
+        return result;
+    }
+
+    /**
+     * Test equality with another clock.
+     * @param other The other clock.
+     * @return True, if and only if the other clock is equal to this.
+     */
+    public boolean equals(Clock other) {
+        if (other == null) return false;
+        if (getMaximum() != other.getMaximum())
+            return false;
+        if (getCurrent() != other.getCurrent())
+            return false;
+        return Objects.equals(getType(), other.getType())
+        && isEnabled() == other.isEnabled();
+
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (Clock.class.isAssignableFrom(obj.getClass()))
+            return equals((Clock)obj);
+        else
+            return false;
+    }
+
+
+    
 }
