@@ -68,11 +68,4 @@ public class ClockController implements Controller<Integer, Clock> {
 
         }
     }
-
-    @Override
-    public Clock create(Request request, Response response) {
-        Clock clock = getEntity(request);
-        Integer id = getService().create(clock);
-        return new IdClock<Integer>(id, getService().fetch(id).orElse(null));
-    }
 }
