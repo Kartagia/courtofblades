@@ -8,6 +8,8 @@ import org.restexpress.Request;
 import org.restexpress.Response;
 import org.restexpress.exception.BadRequestException;
 
+import com.kautiainen.antti.rpgs.courtofblades.model.Identified;
+
 import io.netty.handler.codec.http.HttpResponseStatus;
 
 /**
@@ -110,10 +112,10 @@ public interface Controller<ID, E> {
      * @param response The response.
      * @return The created resource.
      */
-    default E create(Request request, Response response) {
+    default Identified<ID, E> create(Request request, Response response) {
         E entity = getEntity(request);
         ID index = getService().create(entity);
-        return getService().fetch(index).get();
+        return Identified.from(index, getService().fetch(index).get());
     }
 
     /**
